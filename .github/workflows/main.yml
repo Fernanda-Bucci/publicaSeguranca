@@ -24,6 +24,4 @@ jobs:
             tags: |
               fernandabucci1910/publicaSeguranca: ${{ gihub.run_number }}
               fernandabucci1910/publicaSeguranca:latest
-              
-        - name: Passo 02
-          run: echo "Publicar a imagem no Docker hub"
+
