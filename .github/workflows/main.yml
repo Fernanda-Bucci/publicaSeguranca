@@ -22,6 +22,6 @@ jobs:
             file: ./Dockerfile
             push: true
             tags: |
-              fernandabucci1910/publicaSeguranca:${{ github.run_number }}
-              fernandabucci1910/publicaSeguranca:latest
+              fernandabucci1910/publicaseguranca:${{ github.run_number }}
+              fernandabucci1910/publicaseguranca:latest
 
