@@ -11,6 +11,9 @@ jobs:
       - name: Obter código
         uses: actions/checkout@v4.2.0 
 
+      - name: List files in repository
+        run: ls -R
+
       - name: Docker Login
         uses: docker/login-action@v3.3.0
         with:
@@ -34,14 +37,14 @@ jobs:
       - name: Obter código
         uses: actions/checkout@v4.2.0
 
+      - name: List files in repository
+        run: ls -R
+
       - name: Set up Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
-      - name: List files
-        run: ls -R
-
       - name: Deploy with Docker Compose
         run: |
-          docker-compose -f ./segurancaPublica/docker-compose.yml up -d
+          docker-compose -f ./segurancaPublica/segurancaPublica/docker-compose.yml up -d
