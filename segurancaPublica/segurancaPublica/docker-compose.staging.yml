@@ -1,0 +1,18 @@
+version: '3'
+services:
+  app:
+    image: fernandabucci1910/publicaseguranca:staging
+    ports:
+      - "8080:80"  # Porta diferente para staging
+    depends_on:
+      - db
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: staging_user
+      POSTGRES_PASSWORD: staging_password
+      POSTGRES_DB: staging_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
