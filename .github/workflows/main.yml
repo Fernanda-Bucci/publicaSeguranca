@@ -9,22 +9,21 @@ on:
   workflow_dispatch:
 
 jobs: 
+  # Job de Continuous Integration (CI)
   CI:
     runs-on: ubuntu-latest
     steps: 
       - name: Obter código
         uses: actions/checkout@v4.2.0 
 
-      - name: Build with Maven
-        run: mvn clean install
-
+      # Fazer login no Docker Hub
       - name: Docker Login
         uses: docker/login-action@v3.3.0
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PWD }}
 
-      
+      # Build e push da imagem Docker para o Docker Hub
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.9.0
         with:
@@ -35,8 +34,9 @@ jobs:
             fernandabucci1910/publicaseguranca:${{ github.run_number }}
             fernandabucci1910/publicaseguranca:latest
 
+  # Job de Continuous Deployment (CD) para Staging
   Staging:
-    
+    # Só executa o deploy para staging se for na branch 'staging'
     if: github.ref == 'refs/heads/staging'
     needs: [CI]
     runs-on: ubuntu-latest
@@ -44,18 +44,20 @@ jobs:
       - name: Obter código
         uses: actions/checkout@v4.2.0
 
+      # Instalação do Docker Compose
       - name: Set up Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
+      # Deploy no ambiente de Staging usando docker-compose.staging.yml
       - name: Deploy to Staging
         run: |
           docker-compose -f ./segurancaPublica/segurancaPublica/docker-compose.staging.yml up -d
 
-  
+  # Job de Continuous Deployment (CD) para Produção
   Production:
-    
+    # Só executa o deploy para produção se for na branch 'main'
     if: github.ref == 'refs/heads/main'
     needs: [CI]
     runs-on: ubuntu-latest
@@ -63,11 +65,13 @@ jobs:
       - name: Obter código
         uses: actions/checkout@v4.2.0
 
+      # Instalação do Docker Compose
       - name: Set up Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
+      # Deploy no ambiente de Produção usando docker-compose.yml
       - name: Deploy to Production
         run: |
           docker-compose -f ./segurancaPublica/segurancaPublica/docker-compose.yml up -d
